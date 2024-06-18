@@ -10,17 +10,20 @@ class Employee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     oboryd = db.Column(db.String(50))
+    problem = db.Column(db.String(50))
 
-    def __init__(self, name, oboryd):
+    def __init__(self, name, oboryd, problem):
         self.name = name
         self.oboryd = oboryd
+        self.problem = problem
 with app.app_context():
     db.create_all()
 @app.route('/add_employee', methods=['POST'])
 def add_employee():
     name = request.form['name']
-    position = request.form['oboryd']
-    employee = Employee(name, oboryd)
+    oboryd = request.form['oboryd']
+    problem = request.form['problem']
+    employee = Employee(name, oboryd, problem)
     db.session.add(employee)
     db.session.commit()
     return{"session": "Employee added successfully"}
@@ -31,7 +34,8 @@ def get_employee(id):
         return jsonify({
             'id': employee.id,
             'name': employee.name,
-            'oboryd': employee.oboryd
+            'oboryd': employee.oboryd,
+            'problem': employee.problem
         })
     else:
         return {'error': 'Employee not found'}
